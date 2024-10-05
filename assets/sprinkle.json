@@ -1,0 +1,19 @@
+{
+  "name": "sprinkle",
+  "description": "A sprinkle sound effect for feedback.",
+  "file": "sprinkle.mp3",
+  "type": "audio",
+  "duration": 0.2,
+  "volume": {
+      "default": 0.1,
+      "min": 0.0,
+      "max": 1.0
+  },
+  "playbackSettings": {
+      "loop": false,
+      "fadeIn": 0.1,
+      "fadeOut": 0.1
+  }
+}
+
+  
