@@ -45,7 +45,7 @@ export default function App() {
   const [isClearedOnce, setIsClearedOnce] = useState(false);
   const [hasPlayedErrorSound, setHasPlayedErrorSound] = useState(false);
   const [isLastAnswerCorrect, setIsLastAnswerCorrect] = useState(false);
-
+  const [placeholderTextColor, setPlaceholderTextColor] = useState("#888");
 
   const playSound = async (soundParams) => {
     const { sound } = await Audio.Sound.createAsync(soundParams);
@@ -87,7 +87,7 @@ export default function App() {
 
       // Mark that the game has been cleared once
       setIsClearedOnce(true);
-      setHasPlayedErrorSound(false)
+      setHasPlayedErrorSound(false);
     }
   };
 
@@ -109,7 +109,7 @@ export default function App() {
             setIsSprinkling(true);
             playSound(sprinkleSound);
           } else {
-            resetInputStyle("orange");
+            resetInputStyle("#28a745","#FFFFFF");
             setPlaceholderText("ጎበዝ ✅");
             playSound(correctSound);
           }
@@ -120,10 +120,10 @@ export default function App() {
 
       setText("");
       setHasPlayedErrorSound(false); // Reset error sound flag
-      setIsLastAnswerCorrect(true); 
+      setIsLastAnswerCorrect(true);
     } else {
-      resetInputStyle("pink");
-      setPlaceholderText("ሰህተት ❌");
+      resetInputStyle("#dc3545","#e0e0e0");
+      setPlaceholderText("ሰህተት ✖️");
       setScore((prevScore) => Math.max(prevScore - 1, 0));
       setIsSprinkling(false);
       setIsLastAnswerCorrect(false);
@@ -138,20 +138,21 @@ export default function App() {
     setIsClearedOnce(false);
   };
 
-  const resetInputStyle = (color) => {
+  const resetInputStyle = (color,placeholderColor) => {
     setInputStyle({
       ...styles.input,
       backgroundColor: color,
     });
-    // setPlaceholderText(plcholder);
+    setPlaceholderTextColor(placeholderColor);
   };
 
   const handleNextQuestion = () => {
-    if (isLastAnswerCorrect) { // Only allow proceeding if the last answer was correct
+    if (isLastAnswerCorrect) {
+      // Only allow proceeding if the last answer was correct
       const newRandomNumber = Math.floor(Math.random() * 100) + 1;
       setRandomNumber(newRandomNumber);
       setMyData(generateRandomGeezNumbers(4, newRandomNumber));
-      resetInputStyle("white", "");
+      resetInputStyle("white", "black");
       setPlaceholderText("");
     } else {
       // Optionally, provide feedback that they need to answer correctly first
@@ -195,7 +196,7 @@ export default function App() {
         value={text}
         onChangeText={setText}
         placeholder={placeholderText}
-        placeholderTextColor="#888"
+        placeholderTextColor={placeholderTextColor}
       />
       <View style={styles.optionsContainer}>
         {myData.map((number, index) => (
@@ -240,8 +241,11 @@ const styles = StyleSheet.create({
     marginRight: 3,
   },
   output: {
-    color: "white",
-    fontSize: "20px",
+    color: "#FFF", // White text for contrast
+    fontSize: 20, // Larger font size for better readability
+    fontWeight: "bold", // Bold text for emphasis
+    textAlign: "center", // Center the text
+    paddingVertical: 10, // Add vertical padding for better spacing
   },
   scoreContainer: {
     flexDirection: "column",
@@ -249,23 +253,27 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   randomNumberContainer: {
-    alignItems: "center",
-    justifyContent: "center", // Center content vertically
-    marginBottom: isSmallPhone ? 15 : isMediumPhone ? 20 : 25,
+    backgroundColor: '#f39c12', // A deep orange to contrast with yellow
+    borderRadius: 15,
+    padding: 20,
+    margin: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5, // For Android shadow
+    alignItems: 'center',
   },
   randomNumber: {
-    fontSize: isSmallPhone ? 24 : isMediumPhone ? 28 : 32, // Adjust font size
-    fontWeight: "bold",
-    color: "white",
-    backgroundColor: "#d69a6a",
-    width: isSmallPhone ? 60 : isMediumPhone ? 80 : 100, // Adjust size of circle
-    height: isSmallPhone ? 60 : isMediumPhone ? 80 : 100,
-    borderRadius: isSmallPhone ? 30 : isMediumPhone ? 40 : 50, // Adjust circle radius
-    alignItems: "center", // Center text horizontally
-    justifyContent: "center", // Center text vertically
-    textAlign: "center", // Ensure text is centered
-    display: "flex", // Make it a flex container
-    elevation: 3,
+    fontSize: 36,
+    fontWeight: 'bold',
+    color: '#ffffff', // White text for contrast
+    textShadowColor: '#000',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   scoreText: {
     fontSize: 32,
@@ -291,7 +299,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     width: "75%",
-    textAlign: "center",
+    textAlign: "center"
   },
   optionsContainer: {
     flexDirection: "row",
@@ -301,7 +309,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   optionButton: {
-    backgroundColor: "brown",
+    backgroundColor: "#8B4513", // Dark brown for a richer look
     padding: 15,
     borderRadius: 10,
     flex: 1,
@@ -309,38 +317,75 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     maxWidth: 120,
+    shadowColor: "#000", // Shadow for depth
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5, // Elevation for Android
   },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 20,
+    width: "100%", // Ensure buttons stretch across the available width
+  },
+  output: {
+    color: "#FFF", // White text for contrast against dark background
+    fontSize: 18, // Increased font size for readability
+    fontWeight: "bold", // Bold text for emphasis
+    textAlign: "center", // Center the text
   },
   clearButton: {
-    backgroundColor: "red",
-    padding: 12,
-    borderRadius: 10,
+    backgroundColor: "#FF4D4D", // Bright red
+    padding: 15,
+    borderRadius: 20,
     alignItems: "center",
     flex: 1,
     marginHorizontal: 5,
+    elevation: 5, // Adds shadow for Android
+    shadowColor: "#000", // Shadow for iOS
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
   },
   submitButton: {
-    backgroundColor: "green",
-    padding: 12,
-    borderRadius: 10,
+    backgroundColor: "#4CAF50", // Green
+    padding: 15,
+    borderRadius: 20,
     alignItems: "center",
     flex: 1,
     marginHorizontal: 5,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
   },
   nextButton: {
-    backgroundColor: "blue",
-    padding: 12,
-    borderRadius: 10,
+    backgroundColor: "#2196F3", // Blue
+    padding: 15,
+    borderRadius: 20,
     alignItems: "center",
     flex: 1,
     marginHorizontal: 5,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
   },
   buttonText: {
     color: "#fff",
     fontSize: 20,
+    fontWeight: "bold", // Make text bold for better visibility
   },
 });
